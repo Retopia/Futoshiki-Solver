@@ -59,8 +59,9 @@ def parse_input(file_name):
 
 def main():
     # Gets what file to read from command line
-    parser = argparse.ArgumentParser(description='Solves 15-puzzle program with Weighted A* Search')
-    parser.add_argument('input_file', action='store', type=str, help='The text file containing the 15-puzzle input')
+    parser = argparse.ArgumentParser(description='Solves Futoshiki Puzzles using Backtracking Search for'
+                                                 'Constraint Satisfaction Problems')
+    parser.add_argument('input_file', action='store', type=str, help='The text file containing the futoshiki puzzle input')
     args = parser.parse_args()
 
     global input_file
