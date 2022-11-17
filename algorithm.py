@@ -15,6 +15,9 @@ def solveBoardHelper(board, col, row):
 def getBoard():
     pass
 
+def createOutput():
+    pass
+
 def main():
     board = getBoard()
     solveBoardHelper(board, 0, 0)
