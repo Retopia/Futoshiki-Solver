@@ -13,7 +13,6 @@ horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
-
 def isValid(board, row, col, num):
     pass
 
@@ -23,10 +22,27 @@ def solveBoardHelper(board, col, row):
 def createOutput():
     pass
 
+# Assumes output is a 2D array
+# Writes the solution to a txt file
+def write_solution_to_file(output):
+    file_number = int("".join(filter(str.isdigit, input_file)))
+    result = ""
+
+    # Converts the output to a nicely formatted string
+    for r in range(len(output)):
+        for c in range(len(output[r])):
+            result += output[r][c] + " "
+        result = result.rstrip()
+        result += "\n"
+
+    # Write result to file
+    f = open("Output" + str(file_number) + ".txt", "w+")
+    f.write(result)
+    f.close()
 
 # Reads an input text file
 # Stores data in relevant global variables
-def parse_input(file_name):
+def read_file(file_name):
     data = ""
     # Reads the entire file into data
     with open(file_name) as file:
@@ -86,7 +102,8 @@ def main():
     global input_file
     input_file = args.input_file
 
-    parse_input(input_file)
+    read_file(input_file)
+    write_solution_to_file(initial_state)
 
     # start the algorithm
     solveBoardHelper(board, 0, 0)
