@@ -14,7 +14,14 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
 def isValid(board, row, col, num):
-    pass
+    if horizontal_conditions[row][col] == ">":
+        pass
+    if horizontal_conditions[row][col] == "<":
+        pass
+    if vertical_conditions[row][col] == "^":
+        pass
+    if vertical_conditions[row][col] == "v":
+        pass
 
 def solveBoard(board, col, row):
     # Go to next row
