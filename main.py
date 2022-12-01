@@ -14,19 +14,22 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
 def isValid(board, row, col, num):
-    if(row == 0 or col == 0):
+    if(row == 0 and col == 0):
         return True
-    if horizontal_conditions[row - 1][col] == ">" and num < board[row -1][col]:
-        return False
-    if horizontal_conditions[row - 1][col] == "<" and num > board[row - 1][col]:
-        return False
-    if vertical_conditions[row][col - 1] == "^" and num > board[row][col - 1]:
-        return False
-    if vertical_conditions[row][col - 1] == "v" and num < board[row][col - 1]:
-        return False
+    if(row > 0):
+        if horizontal_conditions[row - 1][col] == ">" and num < int(board[row - 1][col]):
+            return False
+        if horizontal_conditions[row - 1][col] == "<" and num > int(board[row - 1][col]):
+            return False
+    if(col > 0):
+        if vertical_conditions[row][col - 1] == "^" and num > int(board[row][col - 1]):
+            return False
+        if vertical_conditions[row][col - 1] == "v" and num < int(board[row][col - 1]):
+            return False
     return True
 
 def solveBoard(board, col, row):
+    print(col, row)
     # Go to next row
     if(col == 5):
         row += 1
@@ -35,13 +38,18 @@ def solveBoard(board, col, row):
     if(row == 5):
         return board
     if(board[col][row] == "0"):
-        for i in range(1,5):
+        for i in range(1,6):
             if(isValid(board, row, col, i)):
-                board[row][col] == i
+                board[row][col] = str(i)
                 # Keep going until it returns a valid board
-                return solveBoard(board, col + 1, row)
-        # If no valid states, backtrack
+                ans = solveBoard(board, col + 1, row)
+                if ans:
+                    return ans
+            board[col][row] == "0"
+        # print(board)
         return False
+    # If no valid states, backtrack
+    return solveBoard(board, col + 1, row)
 
 # Assumes output is a 2D array
 # Writes the solution to a txt file
@@ -124,14 +132,18 @@ def main():
     input_file = args.input_file
 
     read_file(input_file)
-    write_solution_to_file(initial_state)
 
     # start the algorithm
     valid = solveBoard(initial_state, 0, 0)
     # if there is no solutions
     if not valid:
-        write_solution_to_file("No Valid Solutions")
-    write_solution_to_file(valid)
+        file_number = int("".join(filter(str.isdigit, input_file)))
+        f = open("Output" + str(file_number) + ".txt", "w+")
+        f.write("No Solution")
+        f.close()
+    else:
+        print(valid)
+        write_solution_to_file(valid)
     
 
 if __name__ == "__main__":
