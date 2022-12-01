@@ -45,7 +45,7 @@ def solveBoard(board, col, row):
                 ans = solveBoard(board, col + 1, row)
                 if ans:
                     return ans
-            board[col][row] == "0"
+            board[col][row] = "0"
         # print(board)
         return False
     # If no valid states, backtrack
