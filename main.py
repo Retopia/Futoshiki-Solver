@@ -16,11 +16,22 @@ input_file = ""
 def isValid(board, row, col, num):
     pass
 
-def solveBoardHelper(board, col, row):
-    pass
-
-def createOutput():
-    pass
+def solveBoard(board, col, row):
+    # Go to next row
+    if(col == 5):
+        row += 1
+        col = 0
+    # Gone through the entire board
+    if(row == 5):
+        return board
+    if(board[col][row] == "0"):
+        for i in range(1,5):
+            if(isValid(board, row, col, i)):
+                board[row][col] == i
+                # Keep going until it returns a valid board
+                return solveBoard(board, col + 1, row)
+        # If no valid states, backtrack
+        return False
 
 # Assumes output is a 2D array
 # Writes the solution to a txt file
@@ -106,7 +117,12 @@ def main():
     write_solution_to_file(initial_state)
 
     # start the algorithm
-    solveBoardHelper(board, 0, 0)
+    valid = solveBoard(initial_state, 0, 0)
+    # if there is no solutions
+    if not valid:
+        write_solution_to_file("No Valid Solutions")
+    write_solution_to_file(valid)
+    
 
 if __name__ == "__main__":
     main()
