@@ -68,15 +68,14 @@ def solveBoard(board):
     # returns the board if it is complete
     for rows in board:
         if "0" not in rows:
-            return board
+            return True
     # to_test is a tuple of (row, col)
     to_test = select_unassigned_variable(board)
     for i in range(1, 6):
         if(isValid(board, to_test[0], to_test[1], i)):
             board[to_test[0]][to_test[1]] = str(i)
-            ans = solveBoard(board)
-            if(ans):
-                return ans
+            if(solveBoard(board)):
+                return True
             board[to_test[0]][to_test[1]] = "0"
     return False
 
@@ -186,7 +185,7 @@ def main():
         f.write("No Solution")
         f.close()
     else:
-        write_solution_to_file(valid)
+        write_solution_to_file(initial_state)
     
 
 if __name__ == "__main__":
