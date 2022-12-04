@@ -13,19 +13,34 @@ horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
-def isValid(board, row, col, num):
-    if(row == 0 and col == 0):
-        return True
-    if(row > 0):
-        if horizontal_conditions[row - 1][col] == ">" and num < int(board[row - 1][col]):
-            return False
-        if horizontal_conditions[row - 1][col] == "<" and num > int(board[row - 1][col]):
-            return False
-    if(col > 0):
-        if vertical_conditions[row][col - 1] == "^" and num > int(board[row][col - 1]):
-            return False
-        if vertical_conditions[row][col - 1] == "v" and num < int(board[row][col - 1]):
-            return False
+def isValid(board, row, col):
+    conditions = []
+    if row >= 0 and row != len(board[row]) - 1:
+        if vertical_conditions[row][col] == "^":
+            conditions.append(int(board[row][col]) < int(board[row + 1][col]))
+        if vertical_conditions[row][col] == "v":
+            conditions.append(int(board[row][col]) > int(board[row + 1][col]))
+
+    if row <= len(board) - 1 and row != 0:
+        if vertical_conditions[row - 1][col] == "^":
+            conditions.append(int(board[row][col]) > int(board[row - 1][col]))
+        if vertical_conditions[row - 1][col] == "v":
+            conditions.append(int(board[row][col]) < int(board[row - 1][col]))
+
+    if col >= 0 and col != len(board[row]) - 1:
+        if horizontal_conditions[row][col] == "<":
+            conditions.append(int(board[row][col]) < int(board[row][col + 1]))
+        if horizontal_conditions[row][col] == ">":
+            conditions.append(int(board[row][col]) > int(board[row][col + 1]))
+
+    if col <= len(board[row]) - 1 and col != 0:
+        if horizontal_conditions[row][col - 1] == "<":
+            conditions.append(int(board[row][col]) < int(board[row][col - 1]))
+        if horizontal_conditions[row][col - 1] == ">":
+            conditions.append(int(board[row][col]) > int(board[row][col - 1]))
+
+    if False in conditions:
+        return False
     return True
 
 def solveBoard(board, col, row):
@@ -39,7 +54,7 @@ def solveBoard(board, col, row):
         return board
     if(board[col][row] == "0"):
         for i in range(1,6):
-            if(isValid(board, row, col, i)):
+            if(isValid(board, row, col)):
                 board[row][col] = str(i)
                 # Keep going until it returns a valid board
                 ans = solveBoard(board, col + 1, row)
@@ -86,8 +101,9 @@ def read_file(file_name):
     # Should contain the 3 sections of an input file
     parts = data.split("\n\n")
 
-    # for p in parts:
-    #     print(p, "\n")
+    for p in parts:
+        print(p, "\n")
+
 
     # Parse first section and put it in initial_state
     global initial_state
@@ -120,6 +136,10 @@ def read_file(file_name):
             vertical_conditions[r][c] = vc_col[c]
     # print('\n'.join([' '.join([str(cell) for cell in row]) for row in vertical_conditions]))
 
+    print("board", len(initial_state), len(initial_state[0]))
+    print("horizontal_conditions", len(horizontal_conditions), len(horizontal_conditions[0]))
+    print("vertical_conditions", len(vertical_conditions), len(vertical_conditions[0]))
+
 
 def main():
     # Gets what file to read from command line
@@ -132,6 +152,13 @@ def main():
     input_file = args.input_file
 
     read_file(input_file)
+    # global initial_state
+    # for r in range(len(initial_state)):
+    #     for c in range(len(initial_state[r])):
+    #         if not isValid(initial_state, r, c):
+    #             print(r, c, initial_state[r][c], "Not Valid")
+    #         else:
+    #             print(r, c, initial_state[r][c], "Valid")
 
     # start the algorithm
     valid = solveBoard(initial_state, 0, 0)
