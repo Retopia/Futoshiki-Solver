@@ -13,75 +13,75 @@ horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
-def isValid(board, row, col):
+def isValid(board, row, col, num):
     # Checks to see if this number is in the same col or row
     for i in range(len(board)):
-        if board[row][i] == board[row][col] and col != i:
+        if board[row][i] == num and col != i:
             return False
 
     for i in range(len(board[row])):
-        if board[i][col] == board[row][col] and row != i:
+        if board[i][col] == num and row != i:
             return False
 
     # Checks constraint below
-    if row >= 0 and row != len(board[row]) - 1:
+    if row >= 0 and row != len(board[row]) - 1 and int(board[row + 1][col]) != 0:
         if vertical_conditions[row][col] == "^":
-            if int(board[row][col]) < int(board[row + 1][col]):
+            if num < int(board[row + 1][col]):
                 return False
         if vertical_conditions[row][col] == "v":
-            if int(board[row][col]) > int(board[row + 1][col]):
+            if num > int(board[row + 1][col]):
                 return False
 
     # Checks constraint above
-    if row <= len(board) - 1 and row != 0:
+    if row <= len(board) - 1 and row != 0 and int(board[row - 1][col]) != 0:
         if vertical_conditions[row - 1][col] == "^":
-            if int(board[row][col]) > int(board[row - 1][col]):
+            if num > int(board[row - 1][col]):
                 return False
         if vertical_conditions[row - 1][col] == "v":
-            if int(board[row][col]) < int(board[row - 1][col]):
+            if num < int(board[row - 1][col]):
                 return False
 
     # Checks constraint to right
-    if col >= 0 and col != len(board[row]) - 1:
+    if col >= 0 and col != len(board[row]) - 1 and int(board[row][col + 1]) != 0:
         if horizontal_conditions[row][col] == "<":
-            if int(board[row][col]) < int(board[row][col + 1]):
+            if num < int(board[row][col + 1]):
                 return False
         if horizontal_conditions[row][col] == ">":
-            if int(board[row][col]) > int(board[row][col + 1]):
+            if num > int(board[row][col + 1]):
                 return False
 
     # Checks constraint to left
-    if col <= len(board[row]) - 1 and col != 0:
+    if col <= len(board[row]) - 1 and col != 0 and int(board[row][col - 1]) != 0:
         if horizontal_conditions[row][col - 1] == "<":
-            if int(board[row][col]) < int(board[row][col - 1]):
+            if num < int(board[row][col - 1]):
                 return False
         if horizontal_conditions[row][col - 1] == ">":
-            if int(board[row][col]) > int(board[row][col - 1]):
+            if num > int(board[row][col - 1]):
                 return False
     return True
 
-def solveBoard(board, col, row):
-    print(col, row)
-    # Go to next row
-    if(col == 5):
-        row += 1
-        col = 0
-    # Gone through the entire board
-    if(row == 5):
-        return board
-    if(board[col][row] == "0"):
-        for i in range(1,6):
-            if(isValid(board, row, col)):
-                board[row][col] = str(i)
-                # Keep going until it returns a valid board
-                ans = solveBoard(board, col + 1, row)
-                if ans:
-                    return ans
-            board[col][row] = "0"
-        # print(board)
-        return False
-    # If no valid states, backtrack
-    return solveBoard(board, col + 1, row)
+
+def select_unassigned_variable(board):
+    pass
+
+def solveBoard(board):
+    # returns the board if it is complete
+    for rows in board:
+        if "0" not in rows:
+            return board
+    # to_test is a tuple of (row, col)
+    to_test = select_unassigned_variable(board)
+    for i in range(1, 6):
+        if(isValid(board, to_test[0], to_test[1], i)):
+            board[to_test[0]][to_test[1]] = str(i)
+            ans = solveBoard(board)
+            if(ans):
+                return ans
+            board[to_test[0]][to_test[1]] = "0"
+    return False
+
+
+
 
 # Assumes output is a 2D array
 # Writes the solution to a txt file
@@ -118,8 +118,8 @@ def read_file(file_name):
     # Should contain the 3 sections of an input file
     parts = data.split("\n\n")
 
-    for p in parts:
-        print(p, "\n")
+    # for p in parts:
+    #     print(p, "\n")
 
 
     # Parse first section and put it in initial_state
@@ -153,9 +153,9 @@ def read_file(file_name):
             vertical_conditions[r][c] = vc_col[c]
     # print('\n'.join([' '.join([str(cell) for cell in row]) for row in vertical_conditions]))
 
-    print("board", len(initial_state), len(initial_state[0]))
-    print("horizontal_conditions", len(horizontal_conditions), len(horizontal_conditions[0]))
-    print("vertical_conditions", len(vertical_conditions), len(vertical_conditions[0]))
+    # print("board", len(initial_state), len(initial_state[0]))
+    # print("horizontal_conditions", len(horizontal_conditions), len(horizontal_conditions[0]))
+    # print("vertical_conditions", len(vertical_conditions), len(vertical_conditions[0]))
 
 
 def main():
@@ -170,73 +170,24 @@ def main():
 
     read_file(input_file)
     global initial_state
-    for r in range(len(initial_state)):
-        for c in range(len(initial_state[r])):
-            if not isValid(initial_state, r, c):
-                print(r, c, initial_state[r][c], "Not Valid")
-            else:
-                print(r, c, initial_state[r][c], "Valid")
+    # for r in range(len(initial_state)):
+    #     for c in range(len(initial_state[r])):
+    #         if not isValid(initial_state, r, c):
+    #             print(r, c, initial_state[r][c], "Not Valid")
+    #         else:
+    #             print(r, c, initial_state[r][c], "Valid")
 
     # start the algorithm
-    # valid = solveBoard(initial_state, 0, 0)
-    # # if there is no solutions
-    # if not valid:
-    #     file_number = int("".join(filter(str.isdigit, input_file)))
-    #     f = open("Output" + str(file_number) + ".txt", "w+")
-    #     f.write("No Solution")
-    #     f.close()
-    # else:
-    #     print(valid)
-    #     write_solution_to_file(valid)
+    valid = solveBoard(initial_state, 0, 0)
+    # if there is no solutions
+    if not valid:
+        file_number = int("".join(filter(str.isdigit, input_file)))
+        f = open("Output" + str(file_number) + ".txt", "w+")
+        f.write("No Solution")
+        f.close()
+    else:
+        write_solution_to_file(valid)
     
 
 if __name__ == "__main__":
     main()
-
-''' Steven's Sudoku Solver in C++ for reference
-class Solution {
-public:
-    bool isValid(vector<vector<char>>& board, int row, int col, char num)
-    {
-        for(int i = 0; i < 9; i++)
-        {
-            if(board[i][col] == num)
-                return false;
-            if(board[row][i] == num)
-                return false;
-            if(board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == num)
-                return false;
-        }
-        return true;
-    }
-    
-    bool solveSudokuHelp(vector<vector<char>>& board, int col, int row)
-    {
-        if(col == 9)
-        {
-            row += 1;
-            col = 0;
-        }
-        if(row == 9)
-            return true;
-        if(board[row][col] == '.')
-        {
-            for(char i = '1'; i <= '9'; i++)
-            {
-                if(isValid(board, row, col, i))
-                {
-                    board[row][col] = i;
-                    if (solveSudokuHelp(board, col + 1, row))
-                        return true;
-                }
-                board[row][col] = '.';
-            }
-            return false;
-        }
-        return solveSudokuHelp(board, col + 1, row);
-    }
-    void solveSudoku(vector<vector<char>>& board) {
-        solveSudokuHelp(board, 0, 0);
-    }
-};
-'''
