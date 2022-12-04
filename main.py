@@ -14,6 +14,16 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
 def isValid(board, row, col):
+    # Checks to see if this number is in the same col or row
+    for i in len(board[row]):
+        if board[row][i] == board[row][col] and col != i:
+            return False
+
+    for i in len(board[0][col]):
+        if board[i][col] == board[i][col] and row != i:
+            return False
+
+    # Checks constraint below
     if row >= 0 and row != len(board[row]) - 1:
         if vertical_conditions[row][col] == "^":
             if int(board[row][col]) < int(board[row + 1][col]):
@@ -22,6 +32,7 @@ def isValid(board, row, col):
             if int(board[row][col]) > int(board[row + 1][col]):
                 return False
 
+    # Checks constraint above
     if row <= len(board) - 1 and row != 0:
         if vertical_conditions[row - 1][col] == "^":
             if int(board[row][col]) > int(board[row - 1][col]):
@@ -30,6 +41,7 @@ def isValid(board, row, col):
             if int(board[row][col]) < int(board[row - 1][col]):
                 return False
 
+    # Checks constraint to right
     if col >= 0 and col != len(board[row]) - 1:
         if horizontal_conditions[row][col] == "<":
             if int(board[row][col]) < int(board[row][col + 1]):
@@ -38,6 +50,7 @@ def isValid(board, row, col):
             if int(board[row][col]) > int(board[row][col + 1]):
                 return False
 
+    # Checks constraint to left
     if col <= len(board[row]) - 1 and col != 0:
         if horizontal_conditions[row][col - 1] == "<":
             if int(board[row][col]) < int(board[row][col - 1]):
@@ -156,25 +169,25 @@ def main():
     input_file = args.input_file
 
     read_file(input_file)
-    # global initial_state
-    # for r in range(len(initial_state)):
-    #     for c in range(len(initial_state[r])):
-    #         if not isValid(initial_state, r, c):
-    #             print(r, c, initial_state[r][c], "Not Valid")
-    #         else:
-    #             print(r, c, initial_state[r][c], "Valid")
+    global initial_state
+    for r in range(len(initial_state)):
+        for c in range(len(initial_state[r])):
+            if not isValid(initial_state, r, c):
+                print(r, c, initial_state[r][c], "Not Valid")
+            else:
+                print(r, c, initial_state[r][c], "Valid")
 
     # start the algorithm
-    valid = solveBoard(initial_state, 0, 0)
-    # if there is no solutions
-    if not valid:
-        file_number = int("".join(filter(str.isdigit, input_file)))
-        f = open("Output" + str(file_number) + ".txt", "w+")
-        f.write("No Solution")
-        f.close()
-    else:
-        print(valid)
-        write_solution_to_file(valid)
+    # valid = solveBoard(initial_state, 0, 0)
+    # # if there is no solutions
+    # if not valid:
+    #     file_number = int("".join(filter(str.isdigit, input_file)))
+    #     f = open("Output" + str(file_number) + ".txt", "w+")
+    #     f.write("No Solution")
+    #     f.close()
+    # else:
+    #     print(valid)
+    #     write_solution_to_file(valid)
     
 
 if __name__ == "__main__":
