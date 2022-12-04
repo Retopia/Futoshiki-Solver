@@ -15,12 +15,12 @@ input_file = ""
 
 def isValid(board, row, col):
     # Checks to see if this number is in the same col or row
-    for i in len(board[row]):
+    for i in range(len(board)):
         if board[row][i] == board[row][col] and col != i:
             return False
 
-    for i in len(board[0][col]):
-        if board[i][col] == board[i][col] and row != i:
+    for i in range(len(board[row])):
+        if board[i][col] == board[row][col] and row != i:
             return False
 
     # Checks constraint below
