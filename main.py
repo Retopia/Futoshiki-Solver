@@ -14,33 +14,37 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 
 def isValid(board, row, col):
-    conditions = []
     if row >= 0 and row != len(board[row]) - 1:
         if vertical_conditions[row][col] == "^":
-            conditions.append(int(board[row][col]) < int(board[row + 1][col]))
+            if int(board[row][col]) < int(board[row + 1][col]):
+                return False
         if vertical_conditions[row][col] == "v":
-            conditions.append(int(board[row][col]) > int(board[row + 1][col]))
+            if int(board[row][col]) > int(board[row + 1][col]):
+                return False
 
     if row <= len(board) - 1 and row != 0:
         if vertical_conditions[row - 1][col] == "^":
-            conditions.append(int(board[row][col]) > int(board[row - 1][col]))
+            if int(board[row][col]) > int(board[row - 1][col]):
+                return False
         if vertical_conditions[row - 1][col] == "v":
-            conditions.append(int(board[row][col]) < int(board[row - 1][col]))
+            if int(board[row][col]) < int(board[row - 1][col]):
+                return False
 
     if col >= 0 and col != len(board[row]) - 1:
         if horizontal_conditions[row][col] == "<":
-            conditions.append(int(board[row][col]) < int(board[row][col + 1]))
+            if int(board[row][col]) < int(board[row][col + 1]):
+                return False
         if horizontal_conditions[row][col] == ">":
-            conditions.append(int(board[row][col]) > int(board[row][col + 1]))
+            if int(board[row][col]) > int(board[row][col + 1]):
+                return False
 
     if col <= len(board[row]) - 1 and col != 0:
         if horizontal_conditions[row][col - 1] == "<":
-            conditions.append(int(board[row][col]) < int(board[row][col - 1]))
+            if int(board[row][col]) < int(board[row][col - 1]):
+                return False
         if horizontal_conditions[row][col - 1] == ">":
-            conditions.append(int(board[row][col]) > int(board[row][col - 1]))
-
-    if False in conditions:
-        return False
+            if int(board[row][col]) > int(board[row][col - 1]):
+                return False
     return True
 
 def solveBoard(board, col, row):
