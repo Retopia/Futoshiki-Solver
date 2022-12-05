@@ -65,7 +65,7 @@ def select_unassigned_variable(board):
     pass
 
 def solveBoard(board):
-    # returns the board if it is complete
+    # returns the board if it is complete O(r * c) Full algo will be O(r^2 * c^2) or depends on isValid
     for rows in board:
         if "0" not in rows:
             return True
