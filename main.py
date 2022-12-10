@@ -12,6 +12,7 @@ initial_state = [["0"] * 5 for x in range(5)]
 horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
+min_rem_val_heuristic = [[5] * 5 for x in range(5)]
 
 def isValid(board, row, col, num):
     # Checks to see if this number is in the same col or row
@@ -60,8 +61,26 @@ def isValid(board, row, col, num):
                 return False
     return True
 
-
+# Selects based on minimum remainder value, and if tied, use degree heuristic to break the tie
 def select_unassigned_variable(board):
+    currMin = 5
+    # List of (x,y) tuples showing the location of tied minimum values
+    inCurrMin = []
+    for i in range(len(min_rem_val_heuristic)):
+        for j in range(len(min_rem_val_heuristic[i])):
+            # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
+            if(min_rem_val_heuristic[i][j] < currMin):
+                currMin = min_rem_val_heuristic[i][j]
+                inCurrMin = [(i,j)]
+            elif(min_rem_val_heuristic[i][j] == currMin):
+                inCurrMin.append((i,j))
+    # If no tiebreaker needed, return the cell with the minimum remainder value
+    if inCurrMin.size() == 1:
+        return inCurrMin[0]
+    # TODO implement degree heuristic for all the ties
+
+# updates the minimum remaining value heuristic for this specific area that changed
+def updateMRV(board, row, col):
     pass
 
 def solveBoard(board):
@@ -74,6 +93,7 @@ def solveBoard(board):
     for i in range(1, 6):
         if(isValid(board, to_test[0], to_test[1], i)):
             board[to_test[0]][to_test[1]] = str(i)
+            update_MRV(board, to_test[0], to_test[1])
             if(solveBoard(board)):
                 return True
             board[to_test[0]][to_test[1]] = "0"
