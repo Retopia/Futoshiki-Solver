@@ -14,6 +14,7 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 min_rem_val_heuristic = [[5] * 5 for x in range(5)]
 
+# checks to see if the current selected number would work for the current selected cell
 def isValid(board, row, col, num):
     # Checks to see if this number is in the same col or row
     for i in range(len(board)):
@@ -83,6 +84,7 @@ def select_unassigned_variable(board):
 def updateMRV(board, row, col):
     pass
 
+# algorithm used to solve the board
 def solveBoard(board):
     # returns the board if it is complete O(r * c) Full algo will be O(r^2 * c^2) or depends on isValid
     for rows in board:
