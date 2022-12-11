@@ -12,7 +12,7 @@ initial_state = [["0"] * 5 for x in range(5)]
 horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
-min_rem_val_heuristic = [[5] * 5 for x in range(5)]
+min_rem_val_heuristic = [[1, 1, 1, 1, 1] * 5 for x in range(5)]
 
 # checks to see if the current selected number would work for the current selected cell
 def isValid(board, row, col, num):
