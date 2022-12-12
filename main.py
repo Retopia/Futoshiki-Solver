@@ -12,7 +12,13 @@ initial_state = [["0"] * 5 for x in range(5)]
 horizontal_conditions = [["0"] * 4 for x in range(5)]
 vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
-min_rem_val_heuristic = [[5] * 5 for x in range(5)]
+min_rem_val_heuristic = [[0] * 5 for x in range(5)]
+
+# Represents a cell on the board
+class Cell:
+    def __init__(self, value="0"):
+        self.value = value
+        self.possible_values = {}
 
 # checks to see if the current selected number would work for the current selected cell
 def isValid(board, row, col, num):
@@ -64,23 +70,54 @@ def isValid(board, row, col, num):
 
 # Selects based on minimum remainder value, and if tied, use degree heuristic to break the tie
 def select_unassigned_variable(board):
-    currMin = 5
+    curr_min = 5
+
     # List of (x,y) tuples showing the location of tied minimum values
-    inCurrMin = []
+    tied_for_curr_min = []
     for i in range(len(min_rem_val_heuristic)):
         for j in range(len(min_rem_val_heuristic[i])):
             # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
-            if(min_rem_val_heuristic[i][j] < currMin):
-                currMin = min_rem_val_heuristic[i][j]
-                inCurrMin = [(i,j)]
-            elif(min_rem_val_heuristic[i][j] == currMin):
-                inCurrMin.append((i,j))
-    # If no tiebreaker needed, return the cell with the minimum remainder value
-    if inCurrMin.size() == 1:
-        return inCurrMin[0]
-    # TODO implement degree heuristic for all the ties
+            if len(min_rem_val_heuristic[i][j]) < curr_min:
+                currMin = len(min_rem_val_heuristic[i][j])
+                tied_for_curr_min = [(i, j)]
+            elif len(min_rem_val_heuristic[i][j]) == currMin:
+                tied_for_curr_min.append((i, j))
 
-# updates the minimum remaining value heuristic for this specific area that changed
+    # If no tiebreaker needed, return the cell with the minimum remainder value
+    if tied_for_curr_min.size() == 1:
+        return tied_for_curr_min[0]
+    else:
+        # A tiebreaker is needed, so we use the degree heuristic to tie-break
+        degree_heuristic(board, tied_for_curr_min)
+
+# Takes in an array of tuples
+def degree_heuristic(board, cells):
+    # Create a dictionary that maps each cell to the number of unassigned neighbors
+    degree = {}
+    for x, y in cells:
+        # Count the number of unassigned neighbors
+        count = 0
+        for i in range(len(board)):
+            if cells[i][y] == "0":
+                count += 1
+        for j in range(len(board[y])):
+            if cells[x][j] == "0":
+                count += 1
+        # Subtract 1 from the count because the cell itself is included in the count
+        degree[(x, y)] = count - 1
+
+    # Pick the cell with the most unassigned neighbors
+    max_degree = 0
+    chosen_cell = None
+    for cell, count in degree.items():
+        if count > max_degree:
+            max_degree = count
+            chosen_cell = cell
+
+    # Return the chosen cell
+    return chosen_cell
+
+# Updates the minimum remaining value heuristic for this specific area that changed
 def updateMRV(board, row, col):
     pass
 
@@ -136,10 +173,6 @@ def read_file(file_name):
     # Should contain the 3 sections of an input file
     parts = data.split("\n\n")
 
-    # for p in parts:
-    #     print(p, "\n")
-
-
     # Parse first section and put it in initial_state
     global initial_state
     board_row = parts[0].split("\n")
@@ -147,9 +180,6 @@ def read_file(file_name):
         board_col = board_row[r].split(" ")
         for c in range(5):
             initial_state[r][c] = board_col[c]
-
-    # print('\n'.join([' '.join([str(cell) for cell in row]) for row in initial_state]))
-    # print()
 
     # Parse second section and put it in horizontal_conditions
     global horizontal_conditions
@@ -159,9 +189,6 @@ def read_file(file_name):
         for c in range(4):
             horizontal_conditions[r][c] = hc_col[c]
 
-    # print('\n'.join([' '.join([str(cell) for cell in row]) for row in horizontal_conditions]))
-    # print()
-
     # Parse third section and put it in vertical_conditions
     global vertical_conditions
     vc_row = parts[2].split("\n")
@@ -169,11 +196,6 @@ def read_file(file_name):
         vc_col = vc_row[r].split(" ")
         for c in range(5):
             vertical_conditions[r][c] = vc_col[c]
-    # print('\n'.join([' '.join([str(cell) for cell in row]) for row in vertical_conditions]))
-
-    # print("board", len(initial_state), len(initial_state[0]))
-    # print("horizontal_conditions", len(horizontal_conditions), len(horizontal_conditions[0]))
-    # print("vertical_conditions", len(vertical_conditions), len(vertical_conditions[0]))
 
 
 def main():
@@ -195,6 +217,12 @@ def main():
     #         else:
     #             print(r, c, initial_state[r][c], "Valid")
 
+    # Initialize min_rem_val_heuristic with an empty dictionary
+    global min_rem_val_heuristic
+    for r in range(len(min_rem_val_heuristic)):
+        for c in range(len(min_rem_val_heuristic[r])):
+            min_rem_val_heuristic[r][c] = {}
+
     # start the algorithm
     valid = solveBoard(initial_state, 0, 0)
     # if there is no solutions
@@ -205,7 +233,6 @@ def main():
         f.close()
     else:
         write_solution_to_file(initial_state)
-    
 
 if __name__ == "__main__":
     main()
