@@ -70,6 +70,8 @@ def select_unassigned_variable(board):
     tied_for_curr_min = []
     for i in range(len(min_rem_val_heuristic)):
         for j in range(len(min_rem_val_heuristic[i])):
+            if(board[i][j] != "0"):
+                continue
             # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
             if 5 - len(min_rem_val_heuristic[i][j]) < curr_min:
                 currMin = len(min_rem_val_heuristic[i][j])
