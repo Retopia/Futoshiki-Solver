@@ -29,28 +29,28 @@ def isValid(board, row, col, num):
     # Checks constraint below
     if row >= 0 and row != len(board[row]) - 1 and int(board[row + 1][col]) != 0:
         if vertical_conditions[row][col] == "^":
-            if num < int(board[row + 1][col]):
+            if num > int(board[row + 1][col]):
                 return False
         if vertical_conditions[row][col] == "v":
-            if num > int(board[row + 1][col]):
+            if num < int(board[row + 1][col]):
                 return False
 
     # Checks constraint above
     if row <= len(board) - 1 and row != 0 and int(board[row - 1][col]) != 0:
         if vertical_conditions[row - 1][col] == "^":
-            if num > int(board[row - 1][col]):
+            if num < int(board[row - 1][col]):
                 return False
         if vertical_conditions[row - 1][col] == "v":
-            if num < int(board[row - 1][col]):
+            if num > int(board[row - 1][col]):
                 return False
 
     # Checks constraint to right
     if col >= 0 and col != len(board[row]) - 1 and int(board[row][col + 1]) != 0:
         if horizontal_conditions[row][col] == "<":
-            if num < int(board[row][col + 1]):
+            if num > int(board[row][col + 1]):
                 return False
         if horizontal_conditions[row][col] == ">":
-            if num > int(board[row][col + 1]):
+            if num < int(board[row][col + 1]):
                 return False
 
     # Checks constraint to left
@@ -244,7 +244,6 @@ def main():
 
     # start the algorithm
     valid = solveBoard(initial_state)
-    print(valid)
     # if there is no solutions
     if not valid:
         file_number = int("".join(filter(str.isdigit, input_file)))
