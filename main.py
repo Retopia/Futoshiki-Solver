@@ -101,9 +101,6 @@ def solveBoard(board):
             board[to_test[0]][to_test[1]] = "0"
     return False
 
-
-
-
 # Assumes output is a 2D array
 # Writes the solution to a txt file
 def write_solution_to_file(output):
