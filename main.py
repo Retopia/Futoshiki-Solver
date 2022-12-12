@@ -77,10 +77,10 @@ def select_unassigned_variable(board):
     for i in range(len(min_rem_val_heuristic)):
         for j in range(len(min_rem_val_heuristic[i])):
             # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
-            if len(min_rem_val_heuristic[i][j]) < curr_min:
+            if 5 - len(min_rem_val_heuristic[i][j]) < curr_min:
                 currMin = len(min_rem_val_heuristic[i][j])
                 tied_for_curr_min = [(i, j)]
-            elif len(min_rem_val_heuristic[i][j]) == currMin:
+            elif 5 - len(min_rem_val_heuristic[i][j]) == currMin:
                 tied_for_curr_min.append((i, j))
 
     # If no tiebreaker needed, return the cell with the minimum remainder value
