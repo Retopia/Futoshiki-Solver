@@ -71,7 +71,6 @@ def isValid(board, row, col, num):
 # Selects based on minimum remainder value, and if tied, use degree heuristic to break the tie
 def select_unassigned_variable(board):
     curr_min = 5
-
     # List of (x,y) tuples showing the location of tied minimum values
     tied_for_curr_min = []
     for i in range(len(min_rem_val_heuristic)):
@@ -119,7 +118,27 @@ def degree_heuristic(board, cells):
 
 # Updates the minimum remaining value heuristic for this specific area that changed
 def updateMRV(board, row, col):
-    pass
+    # Go through same row and same col, if it's not a direct neighbor (1 away), add the inserted
+    # value into the dictionary for that cell, if it is, call isValid on all the values that isn't in
+    # the dict, if false add it to dict, if true do nothing.
+    added_value = board[row][col]
+    for i in range(len(board)):
+        # If further away than 1
+        if abs(row - i) > 1:
+            min_rem_val_heuristic[row][i][added_value] = 0
+        else:
+            for num in range(1, 6):
+                if not isValid(board, row, i, num):
+                    min_rem_val_heuristic[row][i][num] = 0
+
+    for i in range(len(board[row])):
+        # If further away than 1
+        if abs(col - i) > 1:
+            min_rem_val_heuristic[i][col][added_value] = 0
+        else:
+            for num in range(1, 6):
+                if not isValid(board, i, col, num):
+                    min_rem_val_heuristic[i][col][num] = 0
 
 # algorithm used to solve the board
 def solveBoard(board):
