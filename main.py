@@ -74,7 +74,7 @@ def select_unassigned_variable(board):
                 continue
             # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
             if 5 - len(min_rem_val_heuristic[i][j]) < curr_min:
-                currMin = len(min_rem_val_heuristic[i][j])
+                curr_min = len(min_rem_val_heuristic[i][j])
                 tied_for_curr_min = [(i, j)]
             elif 5 - len(min_rem_val_heuristic[i][j]) == curr_min:
                 tied_for_curr_min.append((i, j))
