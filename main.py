@@ -139,10 +139,13 @@ def update_MRV(board, row, col):
 
 # algorithm used to solve the board
 def solveBoard(board):
+    valid = True
     # returns the board if it is complete O(r * c) Full algo will be O(r^2 * c^2) or depends on isValid
     for rows in board:
-        if "0" not in rows:
-            return True
+        if "0" in rows:
+            valid = False
+    if valid:
+        return True
     # to_test is a tuple of (row, col)
     to_test = select_unassigned_variable(board)
     for i in range(1, 6):
@@ -241,6 +244,7 @@ def main():
 
     # start the algorithm
     valid = solveBoard(initial_state)
+    print(valid)
     # if there is no solutions
     if not valid:
         file_number = int("".join(filter(str.isdigit, input_file)))
