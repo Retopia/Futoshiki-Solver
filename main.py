@@ -14,7 +14,6 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 min_rem_val_heuristic = [[0] * 5 for x in range(5)]
 
-
 # checks to see if the current selected number would work for the current selected cell
 def isValid(board, row, col, num):
     # Checks to see if this number is in the same col or row
@@ -70,11 +69,11 @@ def select_unassigned_variable(board):
     tied_for_curr_min = []
     for i in range(len(min_rem_val_heuristic)):
         for j in range(len(min_rem_val_heuristic[i])):
-            if(board[i][j] != "0"):
+            if board[i][j] != "0":
                 continue
             # If there is a new minimum, reset the inCurrMin and set the currMin to the new min
             if 5 - len(min_rem_val_heuristic[i][j]) < curr_min:
-                currMin = len(min_rem_val_heuristic[i][j])
+                curr_min = len(min_rem_val_heuristic[i][j])
                 tied_for_curr_min = [(i, j)]
             elif 5 - len(min_rem_val_heuristic[i][j]) == curr_min:
                 tied_for_curr_min.append((i, j))
@@ -149,10 +148,10 @@ def solveBoard(board):
     # to_test is a tuple of (row, col)
     to_test = select_unassigned_variable(board)
     for i in range(1, 6):
-        if(isValid(board, to_test[0], to_test[1], i)):
+        if isValid(board, to_test[0], to_test[1], i):
             board[to_test[0]][to_test[1]] = str(i)
             update_MRV(board, to_test[0], to_test[1])
-            if(solveBoard(board)):
+            if solveBoard(board):
                 return True
             board[to_test[0]][to_test[1]] = "0"
     return False
@@ -216,7 +215,6 @@ def read_file(file_name):
         for c in range(5):
             vertical_conditions[r][c] = vc_col[c]
 
-
 def main():
     # Gets what file to read from command line
     parser = argparse.ArgumentParser(description='Solves Futoshiki Puzzles using Backtracking Search for'
@@ -226,15 +224,7 @@ def main():
 
     global input_file
     input_file = args.input_file
-
     read_file(input_file)
-    global initial_state
-    # for r in range(len(initial_state)):
-    #     for c in range(len(initial_state[r])):
-    #         if not isValid(initial_state, r, c):
-    #             print(r, c, initial_state[r][c], "Not Valid")
-    #         else:
-    #             print(r, c, initial_state[r][c], "Valid")
 
     # Initialize min_rem_val_heuristic with an empty dictionary
     global min_rem_val_heuristic
