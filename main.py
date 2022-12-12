@@ -19,11 +19,11 @@ min_rem_val_heuristic = [[0] * 5 for x in range(5)]
 def isValid(board, row, col, num):
     # Checks to see if this number is in the same col or row
     for i in range(len(board)):
-        if board[row][i] == num and col != i:
+        if board[row][i] == str(num) and col != i:
             return False
 
     for i in range(len(board[row])):
-        if board[i][col] == num and row != i:
+        if board[i][col] == str(num) and row != i:
             return False
 
     # Checks constraint below
