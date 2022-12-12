@@ -14,11 +14,6 @@ vertical_conditions = [["0"] * 5 for x in range(4)]
 input_file = ""
 min_rem_val_heuristic = [[0] * 5 for x in range(5)]
 
-# Represents a cell on the board
-class Cell:
-    def __init__(self, value="0"):
-        self.value = value
-        self.possible_values = {}
 
 # checks to see if the current selected number would work for the current selected cell
 def isValid(board, row, col, num):
@@ -79,15 +74,15 @@ def select_unassigned_variable(board):
             if 5 - len(min_rem_val_heuristic[i][j]) < curr_min:
                 currMin = len(min_rem_val_heuristic[i][j])
                 tied_for_curr_min = [(i, j)]
-            elif 5 - len(min_rem_val_heuristic[i][j]) == currMin:
+            elif 5 - len(min_rem_val_heuristic[i][j]) == curr_min:
                 tied_for_curr_min.append((i, j))
 
     # If no tiebreaker needed, return the cell with the minimum remainder value
-    if tied_for_curr_min.size() == 1:
+    if len(tied_for_curr_min) == 1:
         return tied_for_curr_min[0]
     else:
         # A tiebreaker is needed, so we use the degree heuristic to tie-break
-        degree_heuristic(board, tied_for_curr_min)
+        return degree_heuristic(board, tied_for_curr_min)
 
 # Takes in an array of tuples
 def degree_heuristic(board, cells):
@@ -97,10 +92,10 @@ def degree_heuristic(board, cells):
         # Count the number of unassigned neighbors
         count = 0
         for i in range(len(board)):
-            if cells[i][y] == "0":
+            if board[i][y] == "0":
                 count += 1
         for j in range(len(board[y])):
-            if cells[x][j] == "0":
+            if board[x][j] == "0":
                 count += 1
         # Subtract 1 from the count because the cell itself is included in the count
         degree[(x, y)] = count - 1
@@ -117,7 +112,7 @@ def degree_heuristic(board, cells):
     return chosen_cell
 
 # Updates the minimum remaining value heuristic for this specific area that changed
-def updateMRV(board, row, col):
+def update_MRV(board, row, col):
     # Go through same row and same col, if it's not a direct neighbor (1 away), add the inserted
     # value into the dictionary for that cell, if it is, call isValid on all the values that isn't in
     # the dict, if false add it to dict, if true do nothing.
@@ -243,7 +238,7 @@ def main():
             min_rem_val_heuristic[r][c] = {}
 
     # start the algorithm
-    valid = solveBoard(initial_state, 0, 0)
+    valid = solveBoard(initial_state)
     # if there is no solutions
     if not valid:
         file_number = int("".join(filter(str.isdigit, input_file)))
